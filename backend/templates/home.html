@@ -3,15 +3,29 @@
 {% if can_write %}
 <form method="post" action="{{ url_for('create') }}" data-swap="1">
   <h2>新开一轮审评</h2>
-  <input name="lot" placeholder="批次" required />
-  <input name="aroma" type="number" step="0.1" min="0" max="10" placeholder="香气" required />
-  <input name="taste" type="number" step="0.1" min="0" max="10" placeholder="滋味" required />
-  <input name="liquor" type="number" step="0.1" min="0" max="10" placeholder="汤色" required />
+  <p>
+    <input name="lot" placeholder="批次" required />
+    <input name="aroma" type="number" step="0.1" min="0" max="10" placeholder="香气" required />
+    <input name="taste" type="number" step="0.1" min="0" max="10" placeholder="滋味" required />
+    <input name="liquor" type="number" step="0.1" min="0" max="10" placeholder="汤色" required />
+  </p>
+  <fieldset>
+    <legend>香气词（至少勾选 {{ min_terms }} 个，须来自<a href="{{ url_for('library') }}">香气词库</a>）</legend>
+    {% if terms %}
+      {% for term in terms %}
+        <label style="margin-right: 12px;">
+          <input type="checkbox" name="aroma_terms" value="{{ term }}" /> {{ term }}
+        </label>
+      {% endfor %}
+    {% else %}
+      <span class="error-msg">词库暂无词条，请先到香气词库添加。</span>
+    {% endif %}
+  </fieldset>
   <button>提交</button>
 </form>
 {% endif %}
 <table>
-  <thead><tr><th>批次</th><th>加权分</th><th>结论</th><th>说明</th></tr></thead>
+  <thead><tr><th>批次</th><th>香气词</th><th>加权分</th><th>结论</th><th>说明</th><th></th></tr></thead>
   <tbody id="rows">
     {% for row in rows %}{% include "_row.html" %}{% endfor %}
   </tbody>

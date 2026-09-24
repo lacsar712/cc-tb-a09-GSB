@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>香气词库</h1>
+{% if message %}<p>{{ message }}</p>{% endif %}
+
+{% if can_write %}
+<form method="post" action="{{ url_for('add_term') }}">
+  <input name="term" placeholder="新增香气词" required />
+  <button>添加词条</button>
+</form>
+{% endif %}
+
+<table>
+  <thead><tr><th>词条</th><th>维护人</th>{% if can_write %}<th></th>{% endif %}</tr></thead>
+  <tbody>
+    {% for term in terms %}
+    <tr>
+      <td><span class="term-tag">{{ term.term }}</span></td>
+      <td>{{ term.created_by }}</td>
+      {% if can_write %}
+      <td>
+        <form method="post" action="{{ url_for('delete_term', term_id=term.id) }}" style="display:inline; margin:0; padding:0; background:none;">
+          <button>删除</button>
+        </form>
+      </td>
+      {% endif %}
+    </tr>
+    {% else %}
+    <tr><td colspan="3">词库暂无词条。</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>交评最少词数</h2>
+{% if can_write %}
+<form method="post" action="{{ url_for('set_min_terms') }}">
+  <input name="min_terms" type="number" min="0" value="{{ min_terms }}" required />
+  <button>保存</button>
+</form>
+{% else %}
+<p>当前交评至少需勾选 <strong>{{ min_terms }}</strong> 个香气词。观察员仅有查看权限。</p>
+{% endif %}
+{% endblock %}

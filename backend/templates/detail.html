@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+<p><a href="{{ url_for('home') }}">← 返回审评台</a></p>
+<h1>审评详情 · {{ row.lot }}</h1>
+<table>
+  <tr><th>批次</th><td>{{ row.lot }}</td></tr>
+  <tr><th>香气分</th><td>{{ row.aroma }}</td></tr>
+  <tr><th>滋味分</th><td>{{ row.taste }}</td></tr>
+  <tr><th>汤色分</th><td>{{ row.liquor }}</td></tr>
+  <tr><th>加权分</th><td>{{ row.score }}</td></tr>
+  <tr>
+    <th>结论</th>
+    <td class="{% if row.verdict == '通过' %}pass{% else %}fail{% endif %}">{{ row.verdict }}</td>
+  </tr>
+  <tr><th>说明</th><td>{{ row.note }}</td></tr>
+  <tr>
+    <th>交评时勾选的香气词</th>
+    <td>
+      {% if row.selected_terms %}
+        {% for term in row.selected_terms %}<span class="term-tag">{{ term }}</span>{% endfor %}
+      {% else %}
+        <span>（无）</span>
+      {% endif %}
+    </td>
+  </tr>
+  <tr><th>审评人</th><td>{{ row.created_by }}</td></tr>
+</table>
+{% endblock %}
