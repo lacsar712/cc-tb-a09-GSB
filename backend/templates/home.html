@@ -7,11 +7,21 @@
   <input name="aroma" type="number" step="0.1" min="0" max="10" placeholder="香气" required />
   <input name="taste" type="number" step="0.1" min="0" max="10" placeholder="滋味" required />
   <input name="liquor" type="number" step="0.1" min="0" max="10" placeholder="汤色" required />
+  <fieldset>
+    <legend>香气词（至少勾选 {{ min_terms }} 个，须来自<a href="{{ url_for('aroma_library') }}">香气词库</a>）</legend>
+    <div class="terms">
+      {% for term in terms %}
+      <label><input type="checkbox" name="aroma_terms" value="{{ term }}" /> {{ term }}</label>
+      {% else %}
+      <span class="hint">词库为空，请先到香气词库维护词条。</span>
+      {% endfor %}
+    </div>
+  </fieldset>
   <button>提交</button>
 </form>
 {% endif %}
 <table>
-  <thead><tr><th>批次</th><th>加权分</th><th>结论</th><th>说明</th></tr></thead>
+  <thead><tr><th>批次</th><th>香气词</th><th>加权分</th><th>结论</th><th>说明</th></tr></thead>
   <tbody id="rows">
     {% for row in rows %}{% include "_row.html" %}{% endfor %}
   </tbody>

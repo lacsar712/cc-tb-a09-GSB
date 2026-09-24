@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>香气词库</h1>
+<p class="hint">审评员维护词库条目与交评最少词数；交评时勾选原文随审评行存档，事后增删词条不影响已存勾选。</p>
+
+{% if can_write %}
+<form method="post" action="{{ url_for('add_term') }}">
+  <h2>新增香气词</h2>
+  <input name="term" placeholder="例如：栗香" required />
+  <button>添加</button>
+</form>
+{% endif %}
+
+<h2>词条（共 {{ terms | length }} 个）</h2>
+<table>
+  <thead><tr><th>香气词</th>{% if can_write %}<th>操作</th>{% endif %}</tr></thead>
+  <tbody>
+    {% for term in terms %}
+    <tr>
+      <td>{{ term.term }}</td>
+      {% if can_write %}
+      <td>
+        <form method="post" action="{{ url_for('delete_term', term_id=term.id) }}">
+          <button>删除</button>
+        </form>
+      </td>
+      {% endif %}
+    </tr>
+    {% else %}
+    <tr><td colspan="{{ 2 if can_write else 1 }}">词库暂无词条</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if can_write %}
+<form method="post" action="{{ url_for('set_min_terms') }}">
+  <h2>交评最少词数</h2>
+  <input name="min_terms" type="number" min="0" value="{{ min_terms }}" required />
+  <button>保存</button>
+</form>
+{% else %}
+<p class="hint">当前交评最少词数：{{ min_terms }} 个（观察员只读）</p>
+{% endif %}
+{% endblock %}
